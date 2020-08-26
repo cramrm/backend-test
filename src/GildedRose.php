@@ -12,41 +12,50 @@ class GildedRose {
 
     function update_quality() {
         foreach ($this->items as $item) {
+
             if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
                 if ($item->quality > 0 and $item->name != 'Sulfuras, Hand of Ragnaros') {
-                        $item->quality = $item->quality - 1;
+                        $item->quality = $this->decrease($item->quality);
                 }
             } else {
                 if ($item->quality < 50) {
-                    $item->quality = $item->quality + 1;
+                    $item->quality = $this->increase($item->quality);
                     if ($item->name == 'Backstage passes to a TAFKAL80ETC concert' and $item->sell_in < 11 and $item->quality < 50) {
-                        $item->quality = $item->quality + 1;
+                        $item->quality = $this->increase($item->quality);
                         if ($item->sell_in < 6 and $item->quality < 50) {
-                                $item->quality = $item->quality + 1;
+                                $item->quality = $this->increase($item->quality);
                         }
                     }
                 }
             }
 
             if ($item->name != 'Sulfuras, Hand of Ragnaros') {
-                $item->sell_in = $item->sell_in - 1;
+                $item->sell_in = $this->decrease($item->sell_in);
             }
 
             if ($item->sell_in < 0) {
                 if ($item->name != 'Aged Brie') {
                     if ($item->name != 'Backstage passes to a TAFKAL80ETC concert') {
                         if ($item->quality > 0 and $item->name != 'Sulfuras, Hand of Ragnaros') {
-                                $item->quality = $item->quality - 1;
+                                $item->quality = $this->decrease($item->quality);
                         }
                     } else {
-                        $item->quality = $item->quality - $item->quality;
+                        $item->quality = $this->decrease($item->quality, $item->quality);
                     }
                 } else {
                     if ($item->quality < 50) {
-                        $item->quality = $item->quality + 1;
+                        $item->quality = $this->increase($item->quality);
                     }
                 }
             }
         }
+    }
+
+    private function increase($value, $mutiplicator = 1){
+        return $value + (1*$mutiplicator);
+    }
+
+    private function decrease($value, $mutiplicator = 1){
+        return $value - (1*$mutiplicator);
     }
 }
