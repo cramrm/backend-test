@@ -7,15 +7,14 @@ class GildedRose
 
     private $items;
 
-    function __construct($items)
+    public function __construct($items)
     {
         $this->items = $items;
     }
 
-    function update_quality()
+    public function updateQuality()
     {
         foreach ($this->items as $item) {
-
             //initial filter by not Sulfuras, Hand of Ragnaros
             if ($item->name != 'Sulfuras, Hand of Ragnaros') {
                 $item->sell_in = $this->decrease($item->sell_in);
@@ -23,14 +22,14 @@ class GildedRose
                 //exclude Aged Brie and Backstage passes to a TAFKAL80ETC concert
                 if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
                     if ($item->quality > 0) {
-                        $item->quality = $this->decrease($item->quality );
-                        if ($item->sell_in < 0){
-                            $item->quality = $this->decrease($item->quality );
+                        $item->quality = $this->decrease($item->quality);
+                        if ($item->sell_in < 0) {
+                            $item->quality = $this->decrease($item->quality);
                         }
                     }
 
                 //Aged Brie and Backstage passes to a TAFKAL80ETC concert with item quality < 50
-                } else if ($item->quality < 50) {
+                } elseif ($item->quality < 50) {
                     $item->quality = $this->increase($item->quality);
 
                     //only Aged Brie
@@ -39,8 +38,8 @@ class GildedRose
                     }
 
                     //only Backstage passes to a TAFKAL80ETC concert
-                    if ($item->name == 'Backstage passes to a TAFKAL80ETC concert' ) {
-                        if ($item->sell_in < 10 ) {
+                    if ($item->name == 'Backstage passes to a TAFKAL80ETC concert') {
+                        if ($item->sell_in < 10) {
                             $item->quality = $this->increase($item->quality);
 
                             if ($item->sell_in < 5) {
