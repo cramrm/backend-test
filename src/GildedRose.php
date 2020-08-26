@@ -16,30 +16,39 @@ class GildedRose
     {
         foreach ($this->items as $item) {
 
+            //initial filter by name
             if ($item->name != 'Sulfuras, Hand of Ragnaros') {
                 $item->sell_in = $this->decrease($item->sell_in);
-            }
 
-            if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if ($item->quality > 0 and $item->name != 'Sulfuras, Hand of Ragnaros') {
-                    $item->quality = $this->decrease($item->quality);
-                }
-            } else if ($item->quality < 50) {
-                $item->quality = $this->increase($item->quality);
-                if ($item->name == 'Backstage passes to a TAFKAL80ETC concert' and $item->sell_in < 10 and $item->quality < 50) {
+                if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
+                    if ($item->quality > 0 and $item->name != 'Sulfuras, Hand of Ragnaros') {
+                        $item->quality = $this->decrease($item->quality);
+                    }
+                } else if ($item->quality < 50) {
                     $item->quality = $this->increase($item->quality);
-                    if ($item->sell_in < 5 and $item->quality < 50) {
+                    if ($item->name == 'Aged Brie' and $item->sell_in < 0 and $item->quality < 50) {
                         $item->quality = $this->increase($item->quality);
                     }
+
+                    if ($item->name == 'Backstage passes to a TAFKAL80ETC concert' ) {
+                        if ($item->sell_in < 10 and $item->quality < 50) {
+                            $item->quality = $this->increase($item->quality);
+
+                            if ($item->sell_in < 5 and $item->quality < 50) {
+                                $item->quality = $this->increase($item->quality);
+                            }
+                        }
+
+                    }
+
                 }
             }
 
+            //initial filter by sell in
             if ($item->sell_in < 0) {
-                if ($item->name == 'Aged Brie') {
-                    if ($item->quality < 50) {
-                        $item->quality = $this->increase($item->quality);
-                    }
-                } else {
+                if ($item->name == 'Aged Brie' and $item->quality < 50) {
+
+                } else if ($item->quality != 50) {
                     if ($item->name == 'Backstage passes to a TAFKAL80ETC concert') {
                         $item->quality = $this->decrease($item->quality, $item->quality);
                     } else if ($item->quality > 0 and $item->name != 'Sulfuras, Hand of Ragnaros') {
